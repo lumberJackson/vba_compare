@@ -1,0 +1,207 @@
+Option Compare Database
+Option Explicit
+' This function will compare the values and
+' write the monthly equivalent in the tbl_essentialInformation
+' table in the corresponding "numPerMo" field
+Function monthlyEquivalent(truck As String) As Double
+    Dim passedtruck As String
+    passedtruck = truck
+    
+    Dim con As ADODB.Connection
+        
+    Dim rs_famlist As ADODB.Recordset
+    Dim sqlstr_to_tbl_familyList As String
+    Dim rs_essinfo As ADODB.Recordset
+    Dim sqlstr_to_tbl_essentialInformation As String
+
+    sqlstr_to_tbl_familyList = "SELECT * FROM tbl_familyList"
+    sqlstr_to_tbl_essentialInformation = "SELECT * FROM tbl_essentialInformation"
+
+    Set con = CurrentProject.Connection
+    Set rs_famlist = New ADODB.Recordset
+    Set rs_essinfo = New ADODB.Recordset
+
+    rs_famlist.Open sqlstr_to_tbl_familyList, con
+    rs_famlist.MoveFirst
+    rs_essinfo.Open sqlstr_to_tbl_essentialInformation, con
+    rs_essinfo.MoveFirst
+
+    Do While (Not rs_famlist.EOF)
+        If passedtruck = rs_famlist.Fields("Family") Then
+            monthlyEquivalent = rs_famlist.Fields("MonthlyAmount")
+            Exit Do
+        End If
+        rs_famlist.MoveNext
+    Loop
+    
+    rs_famlist.Close
+    rs_essinfo.Close
+    Set rs_famlist = Nothing
+    Set rs_essinfo = Nothing
+    
+End Function
+
+                      
+Function monthlyEquivalentOfList(truckString As String) As Double
+        Dim passedTruckString As String
+        passedTruckString = truckString
+                
+        ' this paragraph is to open up the table of trucks
+        ' and their equivalent values.
+        ' Object will be rs_famlist
+        Dim con As ADODB.Connection
+        Dim rs_famlist As ADODB.Recordset
+        Dim sqlstr_to_tbl_familyList As String
+        sqlstr_to_tbl_familyList = "SELECT * FROM tbl_familyList"
+        Set con = CurrentProject.Connection
+        Set rs_famlist = New ADODB.Recordset
+        rs_famlist.Open sqlstr_to_tbl_familyList, con
+        
+        
+        
+        Dim i As Integer
+        Dim sumoflist As Double
+        sumoflist = 0
+        Dim a As Variant
+        Dim b As Variant
+        a = Split(passedTruckString, ",")
+        b = UBound(a)
+        For i = 0 To b
+            rs_famlist.MoveFirst
+            Do While (Not rs_famlist.EOF)
+                If (Trim(a(i))) = rs_famlist.Fields("Family") Then
+                    sumoflist = rs_famlist.Fields("MonthlyAmount") + sumoflist
+                    Exit Do
+        
+                Else: rs_famlist.MoveNext
+                End If
+            Loop
+        Next
+        monthlyEquivalentOfList = sumoflist
+End Function
+
+' sortTable takes each object in "family_trim"
+' and if it is a single family (e.g. no commas)in the string
+' it will pass it to a function called "monthlyEquivalent"
+' and will associate a value with it.
+' If it is a string of family names,
+' the object will be passed to a function name
+' monthlyEquivalentOfList which will parse the string
+' and sum up each elements equivalent monthly value
+Sub sortTable()
+    Dim con As ADODB.Connection
+    Dim rs As ADODB.Recordset
+    Dim sqlstr As String
+    Dim element As String
+    Dim retval As Double
+    
+    sqlstr = "SELECT * FROM tbl_essentialInformation ORDER BY family_trim"
+    Set con = CurrentProject.Connection
+    Set rs = New ADODB.Recordset
+    rs.Open sqlstr, con, adOpenDynamic, adLockOptimistic
+    ' BEGIN LOOP STRUCTURE
+    rs.MoveFirst
+    Do While (Not rs.EOF)
+        element = rs.Fields("family_trim")
+        If element = "160" Then
+            retval = monthlyEquivalent(element)
+            rs.Fields("numPerMo") = retval
+            rs.Update
+        ElseIf element = "X" Then
+            retval = monthlyEquivalent(element)
+            rs.Fields("numPerMo") = retval
+            rs.Update
+        ElseIf element = "XRS" Then
+            retval = monthlyEquivalent(element)
+            rs.Fields("numPerMo") = retval
+            rs.Update
+        ElseIf element = "X550" Then
+            retval = monthlyEquivalent(element)
+            rs.Fields("numPerMo") = retval
+            rs.Update
+        ElseIf element = "XLC" Then
+            retval = monthlyEquivalent(element)
+            rs.Fields("numPerMo") = retval
+            rs.Update
+        ElseIf element = "XEC" Then
+            retval = monthlyEquivalent(element)
+            rs.Fields("numPerMo") = retval
+            rs.Update
+        ElseIf element = "XC" Then
+            retval = monthlyEquivalent(element)
+            rs.Fields("numPerMo") = retval
+            rs.Update
+        ElseIf element = "XHC" Then
+            retval = monthlyEquivalent(element)
+            rs.Fields("numPerMo") = retval
+            rs.Update
+        ElseIf element = "TXLS1000" Then
+            retval = monthlyEquivalent(element)
+            rs.Fields("numPerMo") = retval
+            rs.Update
+        ElseIf element = "XTCP" Then
+            retval = monthlyEquivalent(element)
+            rs.Fields("numPerMo") = retval
+            rs.Update
+        ElseIf element = "ODD" Then
+            retval = monthlyEquivalent(element)
+            rs.Fields("numPerMo") = retval
+            rs.Update
+        ElseIf element = "XLS1000" Then
+            retval = monthlyEquivalent(element)
+            rs.Fields("numPerMo") = retval
+            rs.Update
+        ElseIf element = "W" Then
+            retval = monthlyEquivalent(element)
+            rs.Fields("numPerMo") = retval
+            rs.Update
+        ElseIf element = "XW" Then
+            retval = monthlyEquivalent(element)
+            rs.Fields("numPerMo") = retval
+            rs.Update
+        ElseIf element = "WORTHINGTON" Then
+            retval = monthlyEquivalent(element)
+            rs.Fields("numPerMo") = retval
+            rs.Update
+        ElseIf element = "X160" Then
+            retval = monthlyEquivalent(element)
+            rs.Fields("numPerMo") = retval
+            rs.Update
+        ElseIf element = "X800" Then
+            retval = monthlyEquivalent(element)
+            rs.Fields("numPerMo") = retval
+            rs.Update
+        Else
+            retval = monthlyEquivalentOfList(element)
+            
+            rs.Fields("numPerMo") = retval
+            rs.Update
+        End If
+        retval = 0
+        rs.MoveNext
+    Loop
+    ' END LOOP STRUCTURE
+
+    rs.Close
+    con.Close
+    Set rs = Nothing
+    Set con = Nothing
+
+End Sub
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
